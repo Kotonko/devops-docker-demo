@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -7,17 +7,20 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11']
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: ${{ matrix.python-version }}
           cache: 'pip'
 
       - name: Install Dependencies
@@ -29,14 +32,23 @@ jobs:
         run: |
           pytest -v
 
-      - name: Build Docker Image
-        run: |
-          docker build -t devops-docker-demo:${{ github.sha }} .
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
 
-      - name: Verify Docker Image Runs
-        run: |
-          docker run -d -p 5000:5000 --name test-flask-container devops-docker-demo:${{ github.sha }}
-          sleep 3
-          curl http://localhost:5000/
-          docker stop test-flask-container
-          docker rm test-flask-container
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/devops-docker-demo:${{ github.sha }}
