@@ -28,3 +28,15 @@ jobs:
       - name: Run Unit Tests with Pytest
         run: |
           pytest -v
+
+      - name: Build Docker Image
+        run: |
+          docker build -t devops-docker-demo:${{ github.sha }} .
+
+      - name: Verify Docker Image Runs
+        run: |
+          docker run -d -p 5000:5000 --name test-flask-container devops-docker-demo:${{ github.sha }}
+          sleep 3
+          curl http://localhost:5000/
+          docker stop test-flask-container
+          docker rm test-flask-container
