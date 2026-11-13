@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+venv/
+.env
+trust-policy.json
+submission-proof.txt
