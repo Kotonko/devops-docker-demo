@@ -1,20 +1,16 @@
-# Use an official lightweight Python base image
-FROM python:3.11-slim
-
-# Set the working directory inside the container
+# Stage 1: Build and test environment
+FROM python:3.11-slim AS builder
 WORKDIR /app
-
-# Copy the dependencies file first to leverage Docker layer caching
-COPY requirements.txt .
-
-# Install the required Python packages
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the application code into the container
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt pytest
 COPY . .
+RUN pytest
 
-# Expose port 5000 so it can communicate with the host machine
+# Stage 2: Production runtime environment
+FROM python:3.11-slim AS runner
+WORKDIR /app
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY . .
 EXPOSE 5000
-
-# Define the command to run your Flask application
 CMD ["python", "app.py"]
