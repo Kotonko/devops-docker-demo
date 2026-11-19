@@ -1,8 +1,8 @@
 # AWS CodeCommit Repository Setup
 
-## Repository Details
-- **Repository Name:** `devops-docker-demo`
-- **Clone URL:** `https://git-codecommit.us-east-1.amazonaws.com/v1/repos/devops-docker-demo`
+## 1. Repository Creation
+- Created an AWS CodeCommit repository named `devops-docker-demo` in `us-east-1`.
+- Configured Git remote credentials via AWS IAM Git credentials helper to connect securely to CodeCommit.
 
-## Git Configuration
-Configured Git credentials helper to authenticate securely with AWS CodeCommit.
+## 2. Push Verification
+- Pushed the source code, `buildspec.yml`, multi-stage `Dockerfile`, and application files directly to the CodeCommit repository branch (`main`).

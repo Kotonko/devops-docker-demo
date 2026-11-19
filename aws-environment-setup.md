@@ -1,11 +1,8 @@
-# AWS Environment Setup
+# AWS Environment Setup & IAM Configuration
 
-## Overview
-This document outlines the configuration and security setup for the AWS DevOps environment used in the `devops-docker-demo` project.
+## 1. Overview
+This document outlines the AWS environment configuration, IAM roles, and CLI setup used for the DevOps Capstone project (Region: `us-east-1`, Account ID: `576134964248`).
 
-## IAM and CLI Configuration
-- **AWS Account ID:** `576134964248`
-- **IAM User:** `kotonko`
-- **Region:** `us-east-1`
-- **AWS CLI Version:** v2.x configured with programmatic access keys.
-- **Security:** Verified identity via `aws sts get-caller-identity`.
+## 2. IAM & Security Configuration
+- **IAM Service Role:** Created a dedicated CodeBuild execution role (`codebuild-devops-service-role`) with permissions for Amazon ECR (`AmazonEC2ContainerRegistryPowerUser`), CloudWatch Logs, and CodeCommit.
+- **AWS CLI:** Verified local installation and configuration using version 2.36.19 with regional profile settings.
