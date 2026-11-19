@@ -28,3 +28,9 @@ phases:
       - echo Pushing image to Amazon ECR registry...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Build and deployment sequence completed successfully.
+
+artifacts:
+  files:
+    - imagedefinitions.json
+    - buildspec.yml
+    - Dockerfile
